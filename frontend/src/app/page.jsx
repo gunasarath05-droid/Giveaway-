@@ -35,7 +35,7 @@ export default function Home() {
     setWinner(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/fetch-comments/', {
+      const response = await fetch('http://localhost:8000/api/fetch-comments/', https://giveaway-4hq6.onrender.com  {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),

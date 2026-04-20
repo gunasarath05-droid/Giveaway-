@@ -6,3 +6,6 @@ python-dotenv
 django-mongodb-backend
 pymongo[srv]
 dnspython
+
+gunicorn
+uvicorn
