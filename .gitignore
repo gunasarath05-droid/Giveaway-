@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+backend/venv/
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Django
+backend/*.sqlite3
+backend/db.sqlite3
+backend/__pycache__/
+backend/staticfiles/
+backend/media/
+
+# Debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
