@@ -45,12 +45,11 @@ RUN playwright install chromium
 # Copy project files
 COPY . .
 
-# Run build steps (migrations, static files) via the existing build.sh
-# Note: Dockerfile already handled dependencies and playwright
-RUN chmod +x build.sh && ./build.sh
+# Make build script executable
+RUN chmod +x build.sh
 
 # Expose the port Render expects
 EXPOSE 10000
 
-# Start the application
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "core.wsgi:application"]
+# Start the application: Run migrations first, then start Gunicorn
+CMD ["sh", "-c", "./build.sh && gunicorn --bind 0.0.0.0:10000 core.wsgi:application"]
