@@ -9,3 +9,4 @@ dnspython
 
 gunicorn
 uvicorn
+whitenoise
