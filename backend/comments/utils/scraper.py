@@ -6,8 +6,16 @@ def scrape_instagram_comments(url):
     comments_data = []
 
     with sync_playwright() as p:
-        # Launch browser with user-agent spoofing
-        browser = p.chromium.launch(headless=True)
+        # Launch browser with recommended stability flags for Render/Linux
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu"
+            ]
+        )
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
         )
@@ -17,8 +25,8 @@ def scrape_instagram_comments(url):
             print(f"Navigating to {url}...")
             page.goto(url, wait_until="networkidle", timeout=60000)
             
-            # Wait for content to load
-            page.wait_for_timeout(3000)
+            # Wait for content to load (Increase for Render/Instagram stability)
+            page.wait_for_timeout(5000)
 
             # Try to close login popup if it appears
             try:
