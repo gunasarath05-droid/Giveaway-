@@ -34,7 +34,7 @@ export default function Home() {
     setComments([]);
     setWinner(null);
 
-    try {
+     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://giveaway-4hq6.onrender.com';
       const response = await fetch(`${apiUrl}/api/fetch-comments/`, {
         method: 'POST',
