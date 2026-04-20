@@ -51,5 +51,5 @@ RUN chmod +x build.sh
 # Expose the port Render expects
 EXPOSE 10000
 
-# Start the application: Run migrations first, then start Gunicorn
-CMD ["sh", "-c", "./build.sh && gunicorn --bind 0.0.0.0:10000 core.wsgi:application"]
+# Start the application: Run migrations first, then start Gunicorn with increased timeout
+CMD ["sh", "-c", "./build.sh && gunicorn --bind 0.0.0.0:10000 --workers 1 --timeout 120 core.wsgi:application"]

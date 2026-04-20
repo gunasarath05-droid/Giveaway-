@@ -14,7 +14,8 @@ def scrape_instagram_comments(url):
                 "--disable-setuid-sandbox",
                 "--disable-dev-shm-usage",
                 "--disable-gpu",
-                "--disable-blink-features=AutomationControlled"
+                "--disable-blink-features=AutomationControlled",
+                "--single-process"
             ]
         )
         context = browser.new_context(
