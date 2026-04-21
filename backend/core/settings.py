@@ -145,5 +145,22 @@ STORAGES = {
     },
 }
 
-CORS_ALLOW_ALL_ORIGINS = True # For development
+# CORS and CSRF Settings
+CORS_ALLOW_ALL_ORIGINS = True # Allow all for now, but explicitly trust the Vercel app
+
+CORS_ALLOWED_ORIGINS = [
+    "https://giveaway-lyart.vercel.app",
+    "http://localhost:3000",
+]
+
+# Support for some older versions of the library just in case
+CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
+
+# Required for POST requests from other origins in modern Django
+CSRF_TRUSTED_ORIGINS = [
+    "https://giveaway-lyart.vercel.app",
+]
+
+# Max age for CORS preflight cache
+CORS_PREFLIGHT_MAX_AGE = 86400
 
