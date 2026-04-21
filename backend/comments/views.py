@@ -21,8 +21,16 @@ def fetch_comments(request):
         print("❌ [API] Missing URL in request data")
         return Response({"error": "URL is required"}, status=status.HTTP_400_BAD_REQUEST)
     
-    if "instagram.com" not in url:
+    if "instagram.com" not in url and url != "test":
         return Response({"error": "Invalid Instagram URL"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Diagnostic test mode
+    if url == "test":
+        print("🧪 [API] Running in TEST MODE (No Playwright)")
+        return Response([
+            {"username": "test_user_1", "comment": "This is a test comment", "likes": 10},
+            {"username": "test_user_2", "comment": "Network test working!", "likes": 5},
+        ])
 
     # Check for recent cached data (e.g., within 1 hour)
     cached_post = ScrapedPost.objects.filter(url=url).first()

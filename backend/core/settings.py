@@ -30,6 +30,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
 
 
 # Application definition
@@ -146,21 +149,26 @@ STORAGES = {
 }
 
 # CORS and CSRF Settings
-CORS_ALLOW_ALL_ORIGINS = True # Allow all for now, but explicitly trust the Vercel app
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
+# Explicitly trust the origins just in case
 CORS_ALLOWED_ORIGINS = [
     "https://giveaway-lyart.vercel.app",
     "http://localhost:3000",
 ]
 
-# Support for some older versions of the library just in case
-CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
-
-# Required for POST requests from other origins in modern Django
 CSRF_TRUSTED_ORIGINS = [
     "https://giveaway-lyart.vercel.app",
 ]
 
-# Max age for CORS preflight cache
 CORS_PREFLIGHT_MAX_AGE = 86400
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
