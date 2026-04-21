@@ -4,7 +4,14 @@ from rest_framework import status
 from django.utils import timezone
 from datetime import timedelta
 from .utils.scraper import scrape_instagram_comments
+import time
 from .models import ScrapedPost, Comment
+
+@api_view(['GET'])
+def health_check(request):
+    """Simple health check to verify server is up."""
+    print("✅ [Health] Received health check request")
+    return Response({"status": "ok", "message": "Server is running"}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def fetch_comments(request):
@@ -29,20 +36,27 @@ def fetch_comments(request):
 
     # If no cache or cache expired, run scraper
     try:
+        start_time = time.time()
+        print(f"🕵️ [API] Starting scraper for {url}")
+        
         scraped_data = scrape_instagram_comments(url)
+        
+        elapsed = time.time() - start_time
+        print(f"⏱️ [API] Scraper took {elapsed:.2f} seconds")
+
         if not scraped_data:
+            print("⚠️ [API] Scraper returned no data")
             return Response({"error": "No comments found or unable to scrape."}, status=status.HTTP_404_NOT_FOUND)
         
+        print(f"💾 [API] Persisting {len(scraped_data)} comments to MongoDB...")
         # Persist to MongoDB
         post, created = ScrapedPost.objects.update_or_create(
             url=url,
             defaults={'updated_at': timezone.now()}
         )
         
-        # Clear existing comments for this post before refreshing
         Comment.objects.filter(post=post).delete()
         
-        # Save new comments
         for item in scraped_data:
             Comment.objects.create(
                 post=post,
@@ -51,6 +65,7 @@ def fetch_comments(request):
                 likes=item['likes']
             )
             
+        print("🎉 [API] Request processed successfully")
         return Response(scraped_data)
         
     except Exception as e:
