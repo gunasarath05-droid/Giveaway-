@@ -9,7 +9,9 @@ from .models import ScrapedPost, Comment
 @api_view(['POST'])
 def fetch_comments(request):
     url = request.data.get('url')
+    print(f"📥 [API] Received request to fetch comments for: {url}")
     if not url:
+        print("❌ [API] Missing URL in request data")
         return Response({"error": "URL is required"}, status=status.HTTP_400_BAD_REQUEST)
     
     if "instagram.com" not in url:
@@ -52,12 +54,14 @@ def fetch_comments(request):
         return Response(scraped_data)
         
     except Exception as e:
+        print(f"❌ [API] Internal error: {str(e)}")
         # Fallback to cache if scraping fails
         if cached_post:
+            print("🔄 [API] Falling back to cached comments...")
             comments_data = Comment.objects.filter(post=cached_post).order_by('-likes')[:10]
             if comments_data.exists():
                 return Response([
                     {"username": c.username, "comment": c.text, "likes": c.likes}
                     for c in comments_data
                 ])
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error": f"Scraping failed: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

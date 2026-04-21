@@ -26,15 +26,15 @@ def scrape_instagram_comments(url):
 
         try:
             print(f"🚀 [Scraper] Navigating to: {url}")
-            page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            page.goto(url, wait_until="domcontentloaded", timeout=25000)
             
             # Check if we were redirected to a login page
             if "/login" in page.url:
                 print("⚠️ [Scraper] Blocked by Login Wall! Instagram is requiring login for this IP.")
                 return []
 
-            # Wait for content to load (Increase for Render/Instagram stability)
-            page.wait_for_timeout(5000)
+            # Wait for content to load (Reduced for speed)
+            page.wait_for_timeout(2000)
             print("✅ [Scraper] Page initial load complete.")
 
             # Try to close login popup if it appears
@@ -51,14 +51,13 @@ def scrape_instagram_comments(url):
             except Exception:
                 pass
 
-            # Scroll to load comments
+            # Scroll to load comments (Reduced count for Render 30s timeout)
             print("🖱️ [Scraper] Scrolling to load comments...")
-            for i in range(12):
+            for i in range(5):
                 page.mouse.wheel(0, 2000)
-                page.wait_for_timeout(1500)
+                page.wait_for_timeout(1000)
                 
-                if i % 4 == 0:
-                    print(f"   - Scroll progress: {i+1}/12")
+                print(f"   - Scroll progress: {i+1}/5")
 
                 # Check for "Load more" button
                 try:
